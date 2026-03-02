@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARK & SPLATTER — Workshop Concept | Oculus Irius</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+
+/* ===========================
+   RESET & ROOT
+=========================== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --white: #faf9f7;
+  --off:   #f0ece4;
+  --ink:   #111010;
+  --red:   #c0180c;
+  --rdim:  #8b1108;
+  --tan:   #c9a97a;
+  --grey:  #7a7570;
+  --bdr:   rgba(17,16,16,0.1);
+  --f-hd:  'Syne', sans-serif;
+  --f-mn:  'Syne Mono', monospace;
+  --f-bd:  'Spectral', serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--f-bd);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* subtle grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.028'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================
+   COVER
+=========================== */
+.cover {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* LEFT — dark */
+.cover-left {
+  background: var(--ink);
+  padding: clamp(1.75rem, 4vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-left::before {
+  content: '';
+  position: absolute;
+  bottom: -4rem; right: -4rem;
+  width: 28rem; height: 28rem;
+  background: radial-gradient(ellipse at 40% 35%, var(--rdim) 0%, rgba(139,17,8,0.4) 40%, transparent 70%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  transform: rotate(-20deg);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.cover-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: riseIn 0.7s forwards 0.1s;
+}
+
+.club-name {
+  font-family: var(--f-mn);
+  font-size: clamp(0.55rem, 1vw, 0.65rem);
+  letter-spacing: 0.25em;
+  color: rgba(250,249,247,0.4);
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+
+.doc-id {
+  font-family: var(--f-mn);
+  font-size: clamp(0.5rem, 1vw, 0.6rem);
+  letter-spacing: 0.2em;
+  color: rgba(250,249,247,0.25);
+  text-align: right;
+  line-height: 1.8;
+  white-space: nowrap;
+}
+
+.cover-hero {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  animation: riseIn 0.7s forwards 0.3s;
+}
+
+.cover-tag {
+  font-family: var(--f-mn);
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cover-tag::before {
+  content: '';
+  width: 2rem;
+  height: 2px;
+  background: var(--red);
+  flex-shrink: 0;
+}
+
+.cover-title {
+  font-family: var(--f-hd);
+  font-size: clamp(2rem, 4vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  word-break: break-word;
+}
+
+.cover-title .amp {
+  font-family: var(--f-bd);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--tan);
+  font-size: 0.7em;
+  display: block;
+  margin: 0.2rem 0;
+  letter-spacing: 0;
+}
+
+.cover-subtitle {
+  margin-top: 1.25rem;
+  font-family: var(--f-bd);
+  font-style: italic;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  color: rgba(250,249,247,0.5);
+  line-height: 1.6;
+  max-width: 100%;
+}
+
+.cover-bottom {
+  opacity: 0;
+  animation: riseIn 0.7s forwards 0.5s;
+}
+
+.cover-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill {
+  font-family: var(--f-mn);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pill-red  { border-color: var(--red); color: var(--red); }
+.pill-tan  { border-color: var(--tan); color: var(--tan); }
+.pill-grey { border-color: rgba(250,249,247,0.2); color: rgba(250,249,247,0.4); }
+
+/* RIGHT — light */
+.cover-right {
+  background: var(--off);
+  padding: clamp(1.75rem, 4vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: riseIn 0.7s forwards 0.6s;
+}
+
+/* fingerprint watermark */
+.cover-right::before {
+  content: '';
+  position: absolute;
+  bottom: 1rem; right: 1rem;
+  width: min(20rem, 60%);
+  height: min(20rem, 60%);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%23111010' stroke-width='1.5' opacity='0.06'%3E%3Cellipse cx='100' cy='100' rx='15' ry='20'/%3E%3Cellipse cx='100' cy='100' rx='25' ry='33'/%3E%3Cellipse cx='100' cy='100' rx='35' ry='46'/%3E%3Cellipse cx='100' cy='100' rx='45' ry='59'/%3E%3Cellipse cx='100' cy='100' rx='55' ry='72'/%3E%3Cellipse cx='100' cy='100' rx='65' ry='82'/%3E%3Cellipse cx='100' cy='100' rx='75' ry='90'/%3E%3Cellipse cx='100' cy='100' rx='85' ry='96'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.ov-label {
+  font-family: var(--f-mn);
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  color: var(--grey);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.ov-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--bdr);
+  display: grid;
+  grid-template-columns: 1.75rem 1fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.ov-item:first-of-type { border-top: 1px solid var(--bdr); }
+
+.ov-n {
+  font-family: var(--f-mn);
+  font-size: 0.6rem;
+  color: var(--red);
+  padding-top: 0.1rem;
+  flex-shrink: 0;
+}
+
+.ov-t {
+  font-family: var(--f-hd);
+  font-size: clamp(0.78rem, 1.2vw, 0.88rem);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.ov-d {
+  font-size: clamp(0.78rem, 1.2vw, 0.85rem);
+  color: var(--grey);
+  line-height: 1.55;
+}
+
+/* ===========================
+   SHARED SECTION STYLES
+=========================== */
+.section {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 5rem) clamp(1.25rem, 4vw, 4rem);
+  border-bottom: 1px solid var(--bdr);
+}
+
+.sec-label {
+  font-family: var(--f-mn);
+  font-size: 0.58rem;
+  letter-spacing: 0.4em;
+  color: var(--grey);
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sec-label .n { color: var(--red); }
+.sec-label::after { content: ''; flex: 1; height: 1px; background: var(--bdr); min-width: 0; }
+
+h2 {
+  font-family: var(--f-hd);
+  font-size: clamp(1.6rem, 3.5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+h2 .red    { color: var(--red); }
+h2 .italic { font-family: var(--f-bd); font-style: italic; font-weight: 300; }
+
+.lead {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  color: var(--grey);
+  line-height: 1.75;
+  max-width: 680px;
+  margin-bottom: 1.5rem;
+}
+
+.body-text {
+  font-size: 1rem;
+  color: #3a3530;
+  line-height: 1.8;
+  margin-bottom: 1.2rem;
+  max-width: 700px;
+}
+
+.pq {
+  font-family: var(--f-bd);
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  color: var(--ink);
+  background: var(--off);
+  border-left: 4px solid var(--red);
+  padding: clamp(1rem, 2vw, 1.5rem) clamp(1rem, 2.5vw, 2rem);
+  margin: 2.5rem 0;
+  line-height: 1.55;
+}
+
+/* ===========================
+   MODULE PANELS
+=========================== */
+.ws-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--bdr);
+  margin: 2.5rem 0;
+}
+
+.ws-panel {
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.ws-panel.light { background: var(--white); }
+.ws-panel.dark  { background: var(--ink); color: var(--white); }
+
+.ws-bg-num {
+  font-family: var(--f-hd);
+  font-size: clamp(4rem, 8vw, 6rem);
+  font-weight: 800;
+  position: absolute;
+  bottom: 0.5rem; right: 1rem;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ws-panel.light .ws-bg-num { color: rgba(17,16,16,0.04); }
+.ws-panel.dark  .ws-bg-num { color: rgba(250,249,247,0.04); }
+
+.ws-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  margin-bottom: 1.25rem;
+  flex-shrink: 0;
+}
+
+.ws-mod {
+  font-family: var(--f-mn);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.ws-panel.light .ws-mod { color: var(--red); }
+.ws-panel.dark  .ws-mod { color: var(--tan); }
+
+.ws-title {
+  font-family: var(--f-hd);
+  font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+  font-weight: 800;
+  margin-bottom: 0.9rem;
+  line-height: 1.15;
+  overflow-wrap: break-word;
+}
+
+.ws-desc {
+  font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+  line-height: 1.75;
+  margin-bottom: 0.8rem;
+}
+
+.ws-panel.light .ws-desc { color: var(--grey); }
+.ws-panel.dark  .ws-desc { color: rgba(250,249,247,0.6); }
+
+/* ===========================
+   ACTIVITY GRID (3 cols)
+=========================== */
+.act-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--bdr);
+  margin: 2.5rem 0;
+}
+
+.act-card {
+  background: var(--white);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  min-width: 0;
+  transition: background 0.2s;
+}
+
+.act-card:hover { background: var(--off); }
+
+.act-num {
+  font-family: var(--f-mn);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.act-title {
+  font-family: var(--f-hd);
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.act-body {
+  font-size: clamp(0.8rem, 1.2vw, 0.88rem);
+  color: var(--grey);
+  line-height: 1.65;
+}
+
+/* ===========================
+   SCIENCE GRID (2 cols)
+=========================== */
+.sci-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 2.5rem 0;
+}
+
+.sci-card {
+  border: 1px solid var(--bdr);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  background: var(--white);
+  min-width: 0;
+  transition: border-color 0.25s;
+}
+
+.sci-card:hover { border-color: var(--red); }
+
+.sci-lbl {
+  font-family: var(--f-mn);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--grey);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.sci-title {
+  font-family: var(--f-hd);
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+
+.sci-body {
+  font-size: clamp(0.8rem, 1.2vw, 0.88rem);
+  color: var(--grey);
+  line-height: 1.65;
+}
+
+/* ===========================
+   OUTCOMES GRID (2 cols)
+=========================== */
+.out-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--bdr);
+  margin: 2.5rem 0;
+}
+
+.out-card {
+  padding: clamp(1.5rem, 2.5vw, 2.5rem);
+  min-width: 0;
+  transition: background 0.2s;
+}
+
+.out-card.light      { background: var(--white); }
+.out-card.light:hover { background: var(--off); }
+.out-card.dark       { background: var(--ink); }
+.out-card.dark:hover  { background: #1a1918; }
+
+.out-icon { font-size: 1.5rem; margin-bottom: 0.85rem; display: block; }
+
+.out-title {
+  font-family: var(--f-hd);
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-weight: 700;
+  margin-bottom: 0.65rem;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.out-card.light .out-title { color: var(--ink); }
+.out-card.dark  .out-title { color: var(--white); }
+
+.out-body {
+  font-size: clamp(0.82rem, 1.2vw, 0.9rem);
+  line-height: 1.7;
+}
+
+.out-card.light .out-body { color: var(--grey); }
+.out-card.dark  .out-body { color: rgba(250,249,247,0.55); }
+
+/* ===========================
+   TAKEAWAY (2 cols dark)
+=========================== */
+.takeaway {
+  background: var(--ink);
+  padding: clamp(2rem, 4vw, 3rem);
+  margin: 2.5rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.takeaway::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--red);
+}
+
+.tw-lbl {
+  font-family: var(--f-mn);
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  color: var(--tan);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.tw-title {
+  font-family: var(--f-hd);
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 0.65rem;
+  line-height: 1.15;
+  overflow-wrap: break-word;
+}
+
+.tw-body {
+  font-size: clamp(0.82rem, 1.2vw, 0.88rem);
+  color: rgba(250,249,247,0.55);
+  line-height: 1.7;
+}
+
+/* ===========================
+   CLOSING
+=========================== */
+.closing {
+  background: var(--off);
+  padding: clamp(3rem, 6vw, 6rem) clamp(1.25rem, 4vw, 4rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.closing::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--red);
+}
+
+.closing-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cl-title {
+  font-family: var(--f-hd);
+  font-size: clamp(2rem, 4.5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  max-width: 700px;
+  overflow-wrap: break-word;
+}
+
+.cl-title .red    { color: var(--red); }
+.cl-title .italic { font-family: var(--f-bd); font-style: italic; font-weight: 300; }
+
+.cl-body {
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  color: var(--grey);
+  line-height: 1.8;
+  margin-bottom: 1.2rem;
+  max-width: 650px;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+/* Tablet landscape & small laptops */
+@media (max-width: 1024px) {
+  .cover {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .cover-left {
+    min-height: 55vh;
+  }
+  .ws-split {
+    grid-template-columns: 1fr;
+  }
+  .out-grid {
+    grid-template-columns: 1fr;
+  }
+  .takeaway {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet portrait */
+@media (max-width: 768px) {
+  .act-grid  { grid-template-columns: 1fr 1fr; }
+  .sci-grid  { grid-template-columns: 1fr; }
+}
+
+/* Mobile */
+@media (max-width: 540px) {
+  .act-grid  { grid-template-columns: 1fr; }
+  .cover-left { min-height: auto; }
+  .doc-id { display: none; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ======== COVER ======== -->
+<div class="cover">
+
+  <div class="cover-left">
+    <div class="cover-topbar">
+      <div class="club-name">Oculus Irius<br>Forensic Medicine Club</div>
+      <div class="doc-id">WORKSHOP CONCEPT<br>REF: OI-WS-002</div>
+    </div>
+
+    <div class="cover-hero">
+      <div class="cover-tag">Dual Workshop Concept</div>
+      <div class="cover-title">
+        MARK
+        <span class="amp">&</span>
+        SPLATTER
+      </div>
+      <p class="cover-subtitle">
+        A hands-on forensic workshop combining the science of blood spatter analysis, the art it creates, and the identity hidden in your fingerprints.
+      </p>
+    </div>
+
+    <div class="cover-bottom">
+      <div class="cover-pills">
+        <span class="pill pill-red">Hands-On</span>
+        <span class="pill pill-tan">No Prior Knowledge Needed</span>
+        <span class="pill pill-grey">Open To All Students</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-right">
+    <div class="ov-label">Workshop At A Glance</div>
+
+    <div class="ov-item">
+      <div class="ov-n">01</div>
+      <div>
+        <div class="ov-t">Blood Spatter Analysis + Art</div>
+        <div class="ov-d">Participants recreate forensic bloodstain patterns using controlled paint drops — then read each other's work as real forensic evidence.</div>
+      </div>
+    </div>
+
+    <div class="ov-item">
+      <div class="ov-n">02</div>
+      <div>
+        <div class="ov-t">Fingerprint Collection + Identity</div>
+        <div class="ov-d">Participants ink, lift, and classify their own fingerprints — discovering what their unique ridge patterns reveal to a forensic investigator.</div>
+      </div>
+    </div>
+
+    <div class="ov-item">
+      <div class="ov-n">03</div>
+      <div>
+        <div class="ov-t">What Participants Take Home</div>
+        <div class="ov-d">Their own spatter art piece with a forensic interpretation written on the back. A personal evidence card carrying their lifted and classified fingerprint.</div>
+      </div>
+    </div>
+
+    <div class="ov-item">
+      <div class="ov-n">04</div>
+      <div>
+        <div class="ov-t">Who It's For</div>
+        <div class="ov-d">Open to all students regardless of background. No forensic or medical knowledge required to participate meaningfully.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ======== 01 THE VISION ======== -->
+<div class="section">
+  <div class="sec-label"><span class="n">01</span> The Vision</div>
+  <h2>Science that <span class="red">feels like art.</span><br>Art that <span class="italic">tells a story.</span></h2>
+  <p class="lead">Mark & Splatter is built on a single insight: the most lasting forensic education doesn't happen when someone explains a concept — it happens when someone creates the evidence themselves.</p>
+  <p class="body-text">Blood spatter analysis is one of the most visually dramatic fields in forensic science. The patterns it produces are genuinely beautiful — and they carry information. When a participant drips, flicks, or casts paint at controlled angles onto white card, they are recreating the same physical phenomenon that forensic investigators read at crime scenes. The experience makes abstract theory immediately, viscerally concrete.</p>
+  <p class="body-text">Fingerprinting takes this further by making it personal. Every participant already carries a uniquely classifiable identity on their fingertips — they simply don't know what type it is, what it means, or how it would be collected at a scene. This workshop answers all three, using their own hands as the subject.</p>
+  <div class="pq">
+    Participants don't study forensic evidence. They become the source of it — and then they learn to read it.
+  </div>
+</div>
+
+<!-- ======== 02 THE TWO MODULES ======== -->
+<div class="section">
+  <div class="sec-label"><span class="n">02</span> The Two Modules</div>
+  <h2>Two disciplines.<br><span class="red">One session.</span></h2>
+
+  <div class="ws-split">
+    <div class="ws-panel dark">
+      <div class="ws-bg-num">A</div>
+      <div class="ws-icon">🩸</div>
+      <div class="ws-mod">Module A</div>
+      <div class="ws-title">Blood Spatter Analysis &amp; Art</div>
+      <p class="ws-desc">Using red tempera paint on white card, participants deliberately recreate the four major bloodstain pattern types — passive drip, projected spatter, cast-off arc, and transfer stain. Each pattern is created at a specific angle or with a specific force, and participants record their variables as they work.</p>
+      <p class="ws-desc">Once complete, participants swap their sheet with a partner. The partner must now read the pattern forensically — estimating drop height, angle of impact, direction of movement, and likely mechanism. They write their interpretation on the reverse. The piece becomes simultaneously artwork and forensic evidence report.</p>
+    </div>
+    <div class="ws-panel light">
+      <div class="ws-bg-num">B</div>
+      <div class="ws-icon" style="background: var(--ink);">🖐️</div>
+      <div class="ws-mod">Module B</div>
+      <div class="ws-title">Fingerprint Collection &amp; Identity Analysis</div>
+      <p class="ws-desc">Participants ink all ten fingertips and press onto pre-labelled evidence cards using proper forensic rolling technique — lateral edge to medial edge. Seniors guide them through immediate classification: each print is identified as a whorl, loop, or arch, and participants record their own distribution across all ten fingers.</p>
+      <p class="ws-desc">In the second half, participants develop a latent fingerprint from scratch — pressing a clean fingertip onto dark card, applying chalk powder with a soft brush to reveal the print, and lifting it with clear tape. The developed print is transferred to a final evidence card that they keep.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== 03 ACTIVITIES ======== -->
+<div class="section">
+  <div class="sec-label"><span class="n">03</span> Activities In Detail</div>
+  <h2>What participants <span class="italic">actually do.</span></h2>
+  <p class="lead">Each module is broken into three focused activities. Participants move through them in sequence, building understanding at each step before the next layer is added.</p>
+
+  <div class="act-grid">
+    <div class="act-card">
+      <div class="act-num">Module A — 01</div>
+      <div class="act-title">Passive Drop Patterns</div>
+      <p class="act-body">Paint is dropped from three heights — 30 cm, 60 cm, 100 cm — onto white card. Participants measure the resulting stain diameter and observe the relationship between fall height and stain size. Satellite droplets are identified and their significance discussed.</p>
+    </div>
+    <div class="act-card">
+      <div class="act-num">Module A — 02</div>
+      <div class="act-title">Projected Spatter &amp; Cast-Off</div>
+      <p class="act-body">A loaded paintbrush flicked from varying distances creates projected spatter with directionality. A string with a paint-soaked tip swung in an arc creates cast-off. Participants identify the differences visually and label each pattern type with its forensic significance.</p>
+    </div>
+    <div class="act-card">
+      <div class="act-num">Module A — 03</div>
+      <div class="act-title">The Forensic Art Piece</div>
+      <p class="act-body">Using all techniques learned, participants create a composite scene on a final sheet — deliberately embedding multiple pattern types. The sheet is exchanged with a partner who writes a complete forensic interpretation on the reverse, identifying each pattern and what it would indicate at a real scene.</p>
+    </div>
+    <div class="act-card">
+      <div class="act-num">Module B — 01</div>
+      <div class="act-title">Ink &amp; Lift</div>
+      <p class="act-body">All ten fingerprints are collected on a standard evidence card using an ink pad and correct rolling technique. Participants are shown how improper technique creates artefacts that can mislead analysis — understanding why protocol matters in forensic collection.</p>
+    </div>
+    <div class="act-card">
+      <div class="act-num">Module B — 02</div>
+      <div class="act-title">Pattern Classification</div>
+      <p class="act-body">Using magnifying glasses and a classification reference, participants identify the pattern type — whorl, loop, or arch — of each of their ten prints. They record their distribution and compare it with population averages, discovering where their fingerprint profile sits statistically.</p>
+    </div>
+    <div class="act-card">
+      <div class="act-num">Module B — 03</div>
+      <div class="act-title">Latent Print Development</div>
+      <p class="act-body">A clean fingertip is pressed on dark card to create an invisible latent print. Chalk powder applied with a soft brush develops the print before their eyes. It is then lifted with clear tape and transferred to a final evidence card — the same technique used at real crime scenes to recover prints from surfaces.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== 04 THE SCIENCE ======== -->
+<div class="section">
+  <div class="sec-label"><span class="n">04</span> The Science Underneath</div>
+  <h2>Every activity has <span class="red">a reason.</span></h2>
+  <p class="lead">Each hands-on exercise is grounded in real forensic science. Participants don't just do the activity — they understand why it works the way it does.</p>
+
+  <div class="sci-grid">
+    <div class="sci-card">
+      <div class="sci-lbl">Spatter Science — 01</div>
+      <div class="sci-title">Directionality &amp; Angle of Impact</div>
+      <p class="sci-body">A circular stain indicates a 90° drop. An elliptical stain reveals the angle — the more elongated the shape, the shallower the impact angle. This relationship is governed by the physics of surface tension and fluid dynamics. Participants calculate the angle of their own drops using the width-to-length ratio formula used in real BPA work.</p>
+    </div>
+    <div class="sci-card">
+      <div class="sci-lbl">Spatter Science — 02</div>
+      <div class="sci-title">Mechanism Differentiation</div>
+      <p class="sci-body">Passive drips fall under gravity alone — they produce circular stains with satellite droplets. Projected spatter involves force — stains are smaller, more numerous, and directional. Cast-off arcs follow the arc of a swinging object. Transfer stains replicate the shape of whatever contacted the surface. Each pattern tells investigators a different story about the event.</p>
+    </div>
+    <div class="sci-card">
+      <div class="sci-lbl">Spatter Science — 03</div>
+      <div class="sci-title">Area of Origin</div>
+      <p class="sci-body">By tracing the long axis of multiple elliptical stains, investigators can identify convergence — the point on a 2D surface directly below where the blood source was located. A simplified stringing demonstration shows participants how this principle works in three dimensions at actual scenes.</p>
+    </div>
+    <div class="sci-card">
+      <div class="sci-lbl">Fingerprint Science — 01</div>
+      <div class="sci-title">Ridge Pattern Formation</div>
+      <p class="sci-body">Friction ridges form between weeks 10 and 24 of foetal development, shaped by random mechanical pressures in the womb. This is why even identical twins have different fingerprints. The three pattern types — arch, loop, whorl — each have distinct subclassifications that allow forensic examiners to narrow an unknown print rapidly.</p>
+    </div>
+    <div class="sci-card">
+      <div class="sci-lbl">Fingerprint Science — 02</div>
+      <div class="sci-title">Latent, Patent &amp; Plastic Prints</div>
+      <p class="sci-body">Latent prints are invisible deposits of sweat and oils — revealed by powdering, chemical fuming, or light. Patent prints are already visible — left in blood, grease, or paint. Plastic prints are three-dimensional impressions left in soft surfaces. Each type requires a different collection method, and recognising which type is present is the first decision a forensic examiner makes at a scene.</p>
+    </div>
+    <div class="sci-card">
+      <div class="sci-lbl">Fingerprint Science — 03</div>
+      <div class="sci-title">The Henry Classification System</div>
+      <p class="sci-body">Developed in 1899 and still the basis of modern fingerprint databases, the Henry System assigns a numerical value to the whorl patterns across all ten fingers. This creates a fraction-based classification code that allows examiners to narrow a database search before detailed comparison begins. Participants see where their own prints would sit in this system.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== 05 LEARNING OUTCOMES ======== -->
+<div class="section">
+  <div class="sec-label"><span class="n">05</span> Learning Outcomes</div>
+  <h2>What participants leave <span class="italic">knowing.</span></h2>
+  <p class="lead">By the end of the workshop, participants have moved from zero awareness to practical, applied understanding of two distinct forensic disciplines.</p>
+
+  <div class="out-grid">
+    <div class="out-card dark">
+      <span class="out-icon">🩸</span>
+      <div class="out-title">Blood Spatter Analysis</div>
+      <p class="out-body">Participants can identify the four major bloodstain pattern types visually. They can estimate angle of impact from stain morphology and distinguish between passive, projected, and cast-off patterns. They understand what each pattern implies about the mechanism and sequence of events at a scene — and they have created and interpreted real examples with their own hands.</p>
+    </div>
+    <div class="out-card light">
+      <span class="out-icon">🖐️</span>
+      <div class="out-title">Fingerprint Identification</div>
+      <p class="out-body">Participants can classify any fingerprint into its primary pattern type using a reference guide. They understand the difference between latent, patent, and plastic prints and how each is developed. They know the basis of the Henry Classification System and how their own prints would be categorised. They have successfully developed a latent print using real forensic technique.</p>
+    </div>
+    <div class="out-card light">
+      <span class="out-icon">🔬</span>
+      <div class="out-title">The Investigative Mindset</div>
+      <p class="out-body">Beyond specific techniques, participants leave with a fundamental shift in how they observe physical evidence. The act of creating evidence and then interpreting it — in the same session — builds the habit of reading scenes rather than simply looking at them. This observational discipline is the foundation of all forensic work, regardless of specialty.</p>
+    </div>
+    <div class="out-card light">
+      <span class="out-icon">⚖️</span>
+      <div class="out-title">Medico-Legal Relevance</div>
+      <p class="out-body">Participants understand why these skills matter beyond the laboratory — how bloodstain pattern evidence has determined manner of death, exonerated the wrongfully accused, and placed suspects at scenes in real criminal investigations. The science is grounded in cases where it changed outcomes, giving the techniques genuine weight and context.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======== 06 TAKEAWAYS ======== -->
+<div class="section">
+  <div class="sec-label"><span class="n">06</span> What Participants Take Home</div>
+  <h2>Evidence they <span class="red">made</span> themselves.</h2>
+  <p class="lead">Every participant leaves with two physical objects — each one simultaneously a personal artifact and a genuine forensic document.</p>
+
+  <div class="takeaway">
+    <div>
+      <div class="tw-lbl">Takeaway 01</div>
+      <div class="tw-title">The Forensic Art Piece</div>
+      <p class="tw-body">A white card sheet carrying the bloodstain patterns the participant deliberately created during Module A. On the reverse: a complete forensic interpretation written by their partner — identifying each pattern type, estimating the variables, and describing what the scene would have implied to an investigator. Both sides together form a complete forensic document.</p>
+    </div>
+    <div>
+      <div class="tw-lbl">Takeaway 02</div>
+      <div class="tw-title">The Personal Evidence Card</div>
+      <p class="tw-body">A pre-formatted forensic evidence card carrying all ten inked fingerprints and the participant's own developed latent print, lifted and transferred using real collection technique. The card includes the participant's pattern classification across all ten fingers and a reference note showing where their profile sits in the Henry Classification System.</p>
+    </div>
+  </div>
+
+  <p class="body-text" style="margin-top:1rem;">These takeaways are designed to be permanent — objects participants keep and return to. The art piece is visually striking enough to display. The evidence card is personal enough to feel significant. Both function as ongoing reminders of what they learned and how they learned it.</p>
+</div>
+
+<!-- ======== CLOSING ======== -->
+<div class="closing">
+  <div class="closing-inner">
+    <h2 class="cl-title">
+      Learning that <span class="red">sticks</span><br>
+      because you <span class="italic">built it.</span>
+    </h2>
+    <p class="cl-body">The best forensic education happens not when someone explains what blood spatter looks like — but when a participant drips paint from sixty centimetres, measures the stain it leaves, and realizes they've just recreated the same calculation that placed a suspect at a real crime scene.</p>
+    <p class="cl-body">Mark &amp; Splatter is not a workshop about forensics. It is a workshop that makes participants feel — genuinely and briefly — like forensic investigators. They create evidence, they read evidence, and they leave with something physical that proves they did both.</p>
+    <p class="cl-body">That experience does not require a textbook, a lecture, or a formal syllabus. It requires a brush, an ink pad, and the right question asked at the right moment.</p>
+  </div>
+</div>
+
+</body>
+</html>
